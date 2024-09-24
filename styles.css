@@ -1,0 +1,197 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Paleta de colores */
+:root {
+    --color-negro: #111;
+    --color-gris: #333; /* Gris oscuro */
+    --color-blanco: #fff;
+}
+
+/* Estilo del cuerpo */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: var(--color-negro);
+    color: var(--color-blanco);
+}
+
+/* Barra de navegación */
+nav {
+    background-color: var(--color-negro);
+    padding: 1rem 2rem;
+}
+
+nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+}
+
+nav ul li {
+    margin: 0 2rem;
+}
+
+nav ul li a {
+    color: var(--color-blanco);
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+}
+
+nav ul li a:hover {
+    color: var(--color-gris);
+}
+
+/* Sección principal */
+.hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    background-color: var(--color-negro);
+}
+
+.hero-text h1 {
+    font-size: 3rem;
+}
+
+.hero-text p {
+    font-size: 1.5rem;
+    margin-top: 1rem;
+}
+
+.hero-text .btn {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.75rem 2rem;
+    background-color: var(--color-blanco);
+    color: var(--color-negro);
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.hero-text .btn:hover {
+    background-color: var(--color-gris);
+}
+
+/* Sección Sobre mí */
+.about {
+    padding: 4rem 2rem;
+    text-align: center;
+    background-color: var(--color-negro);
+}
+
+.about h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.about p {
+    color: var(--color-gris);
+    font-size: 1.2rem;
+}
+
+.about-image {
+    width: 80%;
+    max-width: 400px;
+    border-radius: 10px;
+    margin-top: 1rem;
+    transition: transform 0.3s ease;
+}
+
+.about-image:hover {
+    transform: scale(1.05);
+}
+
+/* Sección Proyectos */
+.projects {
+    padding: 4rem 2rem;
+    background-color: var(--color-gris);
+    color: var(--color-blanco);
+    text-align: center;
+}
+
+.projects h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.project-list {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.project-item {
+    background-color: var(--color-negro);
+    padding: 1.5rem;
+    width: 30%;
+    border-radius: 10px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin: 1rem;
+}
+
+.project-item:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+}
+
+.project-item h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.project-image {
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 1rem;
+}
+
+/* Sección Contacto */
+.contact {
+    padding: 4rem 2rem;
+    background-color: var(--color-negro);
+    text-align: center;
+}
+
+.contact h2 {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+}
+
+.contact p {
+    font-size: 1.2rem;
+    color: var(--color-blanco);
+}
+
+.contact .btn {
+    display: inline-block;
+    margin-top: 2rem;
+    padding: 0.75rem 2rem;
+    background-color: var(--color-blanco);
+    color: var(--color-negro);
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.contact .btn:hover {
+    background-color: var(--color-gris);
+}
+
+/* Pie de página */
+footer {
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--color-negro);
+    color: var(--color-gris);
+}
