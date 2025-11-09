@@ -1,0 +1,489 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HACKERS — Prueba Digital</title>
+  <style>
+    /* === Paleta y variables (coherente con el manual) === */
+    :root{
+      --bg-0:#040504;
+      --panel:#07100a;
+      --text:#cdebd3;
+      --muted:#90a497;
+      --neon1:#00ff88;
+      --neon2:#66ffb3;
+      --glass-border:1px solid rgba(255,255,255,0.03);
+      --radius:12px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;background:linear-gradient(180deg,var(--bg-0),#020202);color:var(--text);-webkit-font-smoothing:antialiased;}
+
+/* === Fondo terminal (no interactivo) === */
+.bg-terminal{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
+.terminal-window{position:absolute;inset:0;display:flex;align-items:flex-end;padding:36px}
+.terminal-stream{width:100%;max-width:1600px;margin:0 auto;line-height:1.25;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;font-size:13px;color:var(--neon1);opacity:0.9;text-shadow:0 0 8px rgba(0,255,136,0.06)}
+.terminal-stream .line{white-space:pre;opacity:0.95}
+.bg-overlay{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6))}
+
+/* === Layout del juego === */
+.container{max-width:980px;margin:28px auto;padding:20px;display:grid;grid-template-columns:1fr;gap:18px}
+.header{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--neon2),var(--neon1));display:flex;align-items:center;justify-content:center;font-weight:800;color:#021105}
+.title{font-size:1.25rem;color:var(--neon2);font-weight:700}
+.subtitle{color:var(--muted);font-size:0.92rem}
+
+/* Panel principal */
+.panel{
+  background:linear-gradient(180deg, rgba(10,14,10,0.9), rgba(6,10,6,0.8));
+  border-radius:var(--radius);
+  padding:18px;
+  border:var(--glass-border);
+  box-shadow:0 10px 30px rgba(0,0,0,0.6);
+}
+
+/* Layout interno */
+.game-area{display:flex;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.left{flex:1;min-width:300px}
+.right{width:320px}
+
+/* Bomba y temporizador */
+.bomba-card{background:linear-gradient(180deg, rgba(0,0,0,0.35), rgba(0,0,0,0.25));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.02)}
+.bomba-container{position:relative;display:block;width:100%;max-width:320px;margin:0 auto}
+.bomba-img{width:100%;border-radius:8px;display:block;filter:brightness(0.95) saturate(0.9)}
+.timer{
+  position:absolute;
+  top:25%;
+  left:52%;
+  transform:translateX(-50%);
+  background:rgba(0,0,0,0.45);
+  color:var(--neon1);
+  font-family:ui-monospace, monospace;
+  font-weight:700;
+  font-size:20px;
+  padding:2px 2px;
+  border-radius:8px;
+  border:1px solid rgba(0,255,136,0.08);
+  text-align:center;
+  min-width:115px;
+  box-shadow:0 6px 20px rgba(0,255,136,0.04);
+  user-select:none;
+}
+
+/* Pregunta y opciones */
+.q-card{margin-top:12px}
+.question{font-family:ui-monospace, monospace;font-size:1.05rem;color:var(--neon1);margin-bottom:12px}
+.options{display:flex;flex-direction:column;gap:10px}
+.option-btn{
+  padding:12px 14px;
+  border-radius:10px;
+  background:transparent;
+  border:1px solid rgba(255,255,255,0.03);
+  color:var(--text);
+  text-align:left;
+  cursor:pointer;
+  transition:transform .15s ease, box-shadow .15s ease, background .12s ease;
+  font-weight:700;
+}
+.option-btn:hover{transform:translateY(-3px);box-shadow:0 10px 30px rgba(0,0,0,0.6);border-color:rgba(0,255,136,0.06)}
+.option-btn.correct{background:linear-gradient(90deg, rgba(0,255,136,0.06), rgba(102,255,179,0.03));border-color:rgba(0,255,136,0.08);color:#021105}
+.option-btn.wrong{background:linear-gradient(90deg, rgba(255,80,80,0.06), rgba(255,80,80,0.03));border-color:rgba(255,80,80,0.08);color:#ffdddd}
+
+/* Small controls */
+.controls{display:flex;gap:8px;align-items:center;margin-top:14px}
+.btn-primary{background:linear-gradient(135deg,var(--neon1),var(--neon2));border:none;color:#021105;padding:10px 14px;border-radius:10px;font-weight:800;cursor:pointer}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+
+/* Estado y pistas */
+.hint-window{margin-top:12px;padding:12px;border-radius:10px;background:linear-gradient(180deg, rgba(6,10,6,0.6), rgba(4,6,4,0.45));border:1px solid rgba(255,255,255,0.02)}
+.status-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+
+/* Explosion / win */
+.result{display:none;margin-top:12px;padding:12px;border-radius:10px;text-align:center;font-weight:800}
+.result.explosion{color:#ff6b6b;display:none}
+.result.win{color:var(--neon2);display:none}
+
+/* Responsive */
+@media (max-width:880px){
+  .game-area{flex-direction:column}
+  .right{width:100%}
+}
+  </style>
+</head>
+<body>
+  <!-- Fondo terminal (no interactivo) -->
+  <div class="bg-terminal" aria-hidden="true">
+    <div class="terminal-window">
+      <div class="terminal-stream" id="terminal-stream" aria-hidden="true"></div>
+    </div>
+  </div>
+  <div class="bg-overlay" aria-hidden="true"></div>
+
+  <div class="container">
+    <div class="header">
+      <div class="brand">
+        <div class="logo">HK</div>
+        <div>
+          <div class="title">HACKERS — Prueba Digital</div>
+          <div class="subtitle">Autores: Brandon Stiven Gil · Juan F. Bravo · Alison Cadena · David Landazury</div>
+        </div>
+      </div>
+      <div class="subtitle">Responde preguntas básicas de Python para manipular el temporizador.</div>
+    </div>
+
+    <div class="panel">
+      <div class="game-area">
+        <!-- IZQUIERDA: bomba + pregunta -->
+        <div class="left">
+          <div class="bomba-card">
+            <div class="bomba-container">
+              <!-- Si no tienes imagen local, reemplaza 'bomba.png' por una URL o deja un bloque oscuro -->
+              <img src="bomba.png" alt="Bomba" class="bomba-img" onerror="this.style.background='#111';this.style.height='160px';this.style.display='block'">
+              <div class="timer" id="temporizador">05:00</div>
+            </div>
+
+            <div class="q-card">
+              <div class="question" id="pregunta">¿Qué es Python?</div>
+              <div class="options" id="opciones"></div>
+
+              <div class="controls">
+                <button class="btn-primary" id="startBtn">Iniciar</button>
+                <button class="btn-ghost" id="resetBtn" style="display:none">Reiniciar</button>
+              </div>
+
+              <div class="hint-window">
+                <div style="font-weight:700;color:var(--neon1)">Reglas rápidas</div>
+                <div class="muted" style="margin-top:8px">
+                  Respuesta correcta: <strong>+1:30</strong>. &nbsp;
+                  Respuesta incorrecta: <strong>-1:00</strong>. &nbsp;
+                  Meta: <strong>10:00</strong>. &nbsp; Si llega a <strong>00:00</strong>, la bomba explota.
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- DERECHA: estado y recursos -->
+        <div class="right">
+          <div class="panel">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+              <div class="muted">Estado</div>
+              <div style="font-weight:800;color:var(--neon1)" id="estado">Detenido</div>
+            </div>
+            <div style="display:flex;justify-content:space-between;align-items:center">
+              <div class="muted">Tiempo</div>
+              <div style="font-weight:800;color:var(--neon2)" id="goal">10:00</div>
+            </div>
+
+            <div style="height:12px"></div>
+
+            <div class="hint-window">
+              <div style="font-weight:700;color:var(--neon1)">Pistas</div>
+              <div class="muted" style="margin-top:8px">
+                Practica indentación, print(), estructuras básicas y predicción de salidas.
+              </div>
+            </div>
+          </div>
+
+          <div style="height:12px"></div>
+
+          <div class="panel">
+            <div style="font-weight:700;color:var(--neon1)">Prueba Física</div>
+            <div class="muted" style="margin-top:8px">Disponemos de un prototipo con tarjetas y cronómetro para pruebas presenciales.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="result explosion" id="explosion">¡BOOM! La bomba ha explotado.</div>
+      <div class="result win" id="victoria">¡Victoria! Temporizador alcanzó 10:00.</div>
+    </div>
+
+    <div style="text-align:center;margin-top:10px;color:var(--muted);font-size:0.85rem">
+      © 2025 HACKERS — Brandon Stiven Gil · Juan F. Bravo · Alison Cadena · David Landazury
+    </div>
+    <button class="btn-primary" onclick="window.location.href='index.html'">Volver al inicio</button>
+
+  </div>
+
+  <script>
+  /* =========================
+     Preguntas y variables
+     ========================= */
+  const preguntas = [
+    { pregunta: "¿Qué es Python?", opciones: ["Lenguaje de programación", "Un animal", "Un framework"], correcta: "Lenguaje de programación" },
+    { pregunta: "¿Cómo se declara una variable en Python?", opciones: ["var nombre = valor", "nombre = valor", "let nombre = valor"], correcta: "nombre = valor" },
+    { pregunta: "¿Qué hace la función print()?", opciones: ["Lee entrada", "Imprime en pantalla", "Calcula suma"], correcta: "Imprime en pantalla" },
+    { pregunta: "Sintaxis correcta for loop", opciones: ["for i in range(5):", "for (i=0; i<5; i++):", "loop i from 0 to 5:"], correcta: "for i in range(5):" },
+    { pregunta: "Tipo de dato de 'Hola'", opciones: ["int", "str", "float"], correcta: "str" },
+    { pregunta: "¿Qué palabra clave se usa para definir una función en Python?", opciones: ["function", "def", "func"], correcta: "def" },
+    { pregunta: "¿Cómo se inicia un comentario en Python?", opciones: ["//", "#", "/*"], correcta: "#" },
+    { pregunta: "¿Cuál de estos es un tipo de dato numérico en Python?", opciones: ["int", "str", "list"], correcta: "int" },
+    { pregunta: "¿Cómo se imprime el texto 'Hola Mundo'?", opciones: ["echo('Hola Mundo')", "printf('Hola Mundo')", "print('Hola Mundo')"], correcta: "print('Hola Mundo')" },
+    { pregunta: "¿Qué operador se usa para comparar igualdad?", opciones: ["=", "==", "==="], correcta: "==" },
+    { pregunta: "¿Cómo se crea una lista vacía?", opciones: ["[]", "{}", "()" ], correcta: "[]" },
+    { pregunta: "¿Qué función devuelve la longitud de una lista?", opciones: ["size()", "count()", "len()"], correcta: "len()" },
+    { pregunta: "¿Cuál es el resultado de 3 ** 2 en Python?", opciones: ["5", "6", "9"], correcta: "9" },
+    { pregunta: "¿Qué instrucción se usa para detener un bucle?", opciones: ["exit", "stop", "break"], correcta: "break" },
+    { pregunta: "¿Qué estructura se usa para tomar decisiones en Python?", opciones: ["if", "switch", "case"], correcta: "if" },
+    { pregunta: "¿Cómo se importa un módulo en Python?", opciones: ["#import modulo", "include modulo", "import modulo"], correcta: "import modulo" },
+    { pregunta: "¿Qué imprime print(type(3.5))?", opciones: ["<class 'float'>", "<class 'int'>", "<class 'str'>"], correcta: "<class 'float'>" },
+    { pregunta: "¿Cuál es la forma correcta de declarar un diccionario?", opciones: ["dict = []", "dict = {}", "dict = ()"], correcta: "dict = {}" },
+    { pregunta: "¿Qué devuelve range(3)?", opciones: ["[0,1,2]", "[1,2,3]", "[0,1,2,3]"], correcta: "[0,1,2]" },
+    { pregunta: "¿Cuál de estos bucles se ejecuta mientras una condición sea verdadera?", opciones: ["for", "while", "loop"], correcta: "while" },
+    { pregunta: "¿Qué palabra clave se usa para manejar errores?", opciones: ["catch", "try", "error"], correcta: "try" },
+    { pregunta: "¿Qué imprime print('5' + '3')?", opciones: ["8", "53", "Error"], correcta: "53" },
+    { pregunta: "¿Qué imprime print(5 + int('3'))?", opciones: ["8", "53", "Error"], correcta: "8" },
+    { pregunta: "¿Cuál es la salida de len('Python')?", opciones: ["5", "6", "7"], correcta: "6" },
+    { pregunta: "¿Qué hace el método append() en una lista?", opciones: ["Agrega un elemento", "Elimina un elemento", "Ordena la lista"], correcta: "Agrega un elemento" }
+
+  ];
+
+  // tiempo en segundos; por defecto 5:00
+  let tiempo = 300;
+  let intervalo = null;
+  let preguntaIndex = 0;
+  const MAX_TIME = 600; // 10:00
+  const MIN_TIME = 0;
+
+  /* =========================
+     Elementos DOM
+     ========================= */
+  const temporizadorEl = document.getElementById('temporizador');
+  const preguntaEl = document.getElementById('pregunta');
+  const opcionesEl = document.getElementById('opciones');
+  const startBtn = document.getElementById('startBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const estadoEl = document.getElementById('estado');
+  const explosionEl = document.getElementById('explosion');
+  const victoriaEl = document.getElementById('victoria');
+
+  /* =========================
+     Funciones utilitarias
+     ========================= */
+  function formatTime(s){
+    const m = Math.floor(s/60);
+    const sec = s%60;
+    return String(m).padStart(2,'0') + ':' + String(sec).padStart(2,'0');
+  }
+
+  function actualizarTemporizadorUI(){
+    temporizadorEl.textContent = formatTime(tiempo);
+  }
+
+  function cambiarEstado(text){
+    estadoEl.textContent = text;
+  }
+
+  /* =========================
+     Lógica del temporizador
+     ========================= */
+  function iniciarTemporizador(){
+    if(intervalo) return;
+    cambiarEstado('En curso');
+    intervalo = setInterval(()=>{
+      tiempo = Math.max(MIN_TIME, tiempo - 1);
+      actualizarTemporizadorUI();
+
+      if(tiempo <= MIN_TIME){
+        clearInterval(intervalo);
+        intervalo = null;
+        finalizarJuego(false);
+      } else if (tiempo >= MAX_TIME){
+        // Si por alguna razón salta a >= MAX_TIME mientras corre, declarar victoria
+        clearInterval(intervalo);
+        intervalo = null;
+        finalizarJuego(true);
+      }
+    }, 1000);
+  }
+
+  function detenerTemporizador(){
+    if(intervalo){ clearInterval(intervalo); intervalo = null; }
+    cambiarEstado('Detenido');
+  }
+
+  /* =========================
+     Preguntas / UI de opciones
+     ========================= */
+  function renderPregunta(){
+    const q = preguntas[preguntaIndex % preguntas.length];
+    preguntaEl.textContent = q.pregunta;
+    opcionesEl.innerHTML = '';
+    q.opciones.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option-btn';
+      btn.textContent = opt;
+      btn.addEventListener('click', ()=> seleccionarRespuesta(btn, opt));
+      opcionesEl.appendChild(btn);
+    });
+  }
+
+  function seleccionarRespuesta(btn, respuesta){
+    // bloquear botones temporalmente para evitar spam
+    const botones = opcionesEl.querySelectorAll('button');
+    botones.forEach(b=>b.disabled = true);
+
+    const correcta = preguntas[preguntaIndex % preguntas.length].correcta;
+    if(respuesta === correcta){
+      // CORRECTA: +1:30 => +90s, cap en MAX_TIME
+      tiempo = Math.min(MAX_TIME, tiempo + 90);
+      btn.classList.add('correct');
+    } else {
+      // INCORRECTA: -1:00 => -60s, floor en MIN_TIME
+      tiempo = Math.max(MIN_TIME, tiempo - 60);
+      btn.classList.add('wrong');
+    }
+
+    actualizarTemporizadorUI();
+
+    // feedback visual breve y avanzar a la siguiente pregunta
+    setTimeout(()=>{
+      // si tiempo alcanzó max o min evaluar fin de juego
+      if(tiempo >= MAX_TIME){
+        finalizarJuego(true);
+        return;
+      }
+      if(tiempo <= MIN_TIME){
+        finalizarJuego(false);
+        return;
+      }
+
+      // avanzar pregunta (hacemos ciclo para que no se acabe la partida cuando se agoten preguntas)
+      preguntaIndex = (preguntaIndex + 1) % preguntas.length;
+      renderPregunta();
+      // reactivar botones
+      const newBtns = opcionesEl.querySelectorAll('button');
+      newBtns.forEach(b=>b.disabled = false);
+    }, 900);
+  }
+
+  /* =========================
+     Finalizar / Reiniciar
+     ========================= */
+  function finalizarJuego(exitoso){
+    detenerTemporizador();
+    document.querySelector('.q-card').style.opacity = '0.6';
+    if(exitoso){
+      victoriaEl.style.display = 'block';
+      explosionEl.style.display = 'none';
+      cambiarEstado('Victoria');
+      // asegurar que temporizador muestre 10:00
+      tiempo = MAX_TIME;
+      actualizarTemporizadorUI();
+    } else {
+      explosionEl.style.display = 'block';
+      victoriaEl.style.display = 'none';
+      cambiarEstado('Explosión');
+      tiempo = MIN_TIME;
+      actualizarTemporizadorUI();
+    }
+    resetBtn.style.display = 'inline-block';
+    startBtn.style.display = 'none';
+  }
+
+  function reiniciarJuego(){
+    detenerTemporizador();
+    tiempo = 300; // reset a 5:00
+    preguntaIndex = 0;
+    document.querySelector('.q-card').style.opacity = '1';
+    explosionEl.style.display = 'none';
+    victoriaEl.style.display = 'none';
+    resetBtn.style.display = 'none';
+    startBtn.style.display = 'inline-block';
+    cambiarEstado('Detenido');
+    actualizarTemporizadorUI();
+    renderPregunta();
+  }
+
+  /* =========================
+     Botones inicio/reset
+     ========================= */
+  startBtn.addEventListener('click', ()=>{
+    renderPregunta();
+    iniciarTemporizador();
+    startBtn.style.display = 'none';
+    resetBtn.style.display = 'inline-block';
+  });
+
+  resetBtn.addEventListener('click', reiniciarJuego);
+
+  /* =========================
+     Inicializar UI
+     ========================= */
+  actualizarTemporizadorUI();
+  renderPregunta();
+
+  /* =========================
+     Fondo terminal: escalado adaptable
+     ========================= */
+  (function(){
+    const stream = document.getElementById('terminal-stream');
+    const linesMax = 60;
+    let typingSpeed = 14;
+    const gapBetweenLines = 600;
+
+    const messages = [
+      "# Equipo: Brandon Stiven Gil, Juan Felipe Bravo, Alison Cadena, David Landazury",
+      "import sys",
+      "from simulator import run_level",
+      "def check_answer(ans):",
+      "    # validar respuesta de Python",
+      "    return isinstance(ans, str)",
+      "user_input = input('res> ')",
+      "if check_answer(user_input):",
+      "    print('OK')",
+      "else:",
+      "    print('ERROR: respuesta inválida')",
+      "# Ejecutando prueba virtual...",
+      "[OK] modulo_sintaxis",
+      "[OK] modulo_estructuras",
+      "[WARN] modulo_algoritmos - tiempo alto",
+      "# Temporizador inicial: variable según nivel",
+      "# Reglas: +1:30 por acierto, -1:00 por fallo",
+      "> Simulador listo",
+      "> Conexión establecida",
+      "> Registrando resultados..."
+    ];
+    const symbols = "abcdefghijklmnopqrstuvwxyz0123456789<>[]{}()!@#$%^&*_+=-";
+    function randSymbolString(len){ let s=''; for(let i=0;i<len;i++) s += symbols.charAt(Math.floor(Math.random()*symbols.length)); return s; }
+
+    function typeLine(text){
+      const el = document.createElement('div');
+      el.className='line';
+      el.textContent='';
+      stream.appendChild(el);
+      if(stream.children.length>linesMax) stream.removeChild(stream.children[0]);
+      let i=0;
+      const dynamicSpeed = Math.max(6, Math.round(typingSpeed * (1200 / Math.max(window.innerWidth,800))));
+      const t = setInterval(()=>{
+        el.textContent += text.charAt(i);
+        i++;
+        if(i>text.length-1){
+          clearInterval(t);
+          el.style.opacity='1';
+          stream.parentElement.scrollTop = stream.parentElement.scrollHeight;
+        }
+      }, dynamicSpeed);
+    }
+
+    function pushNext(){
+      if(Math.random()<0.35){
+        const msg = messages[Math.floor(Math.random()*messages.length)];
+        typeLine('> ' + msg);
+      } else {
+        typeLine('> ' + randSymbolString(Math.floor(Math.random()*40)+10));
+      }
+    }
+
+    for(let i=0;i<8;i++){ setTimeout(pushNext, i*180); }
+    setInterval(pushNext, gapBetweenLines);
+
+    function adjustFont(){ const base = Math.max(10, Math.min(16, Math.round(window.innerWidth / 120))); document.querySelector('.terminal-stream').style.fontSize = base + 'px'; }
+    window.addEventListener('resize', adjustFont);
+    adjustFont();
+  })();
+  </script>
+</body>
+</html>
