@@ -1,448 +1,111 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="es">
+
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>HACKERS — Manual Interactivo</title>
-  <style>
-    /* ========== PALETA VERDE + VARIABLES ========== */
-    :root{
-      --bg-0:#040504;
-      --panel:#07100a;
-      --glass: rgba(255,255,255,0.03);
-      --text:#cdebd3;
-      --muted:#90a497;
-      --neon1:#00ff88;
-      --neon2:#66ffb3;
-      --neon3:#008a5b;
-      --accent:var(--neon1);
-      --radius:12px;
-      --shadow-strong: 0 12px 40px rgba(0,0,0,0.6);
-      --glass-border: 1px solid rgba(255,255,255,0.03);
-    }
 
-    *{box-sizing:border-box}
-    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,'Segoe UI',Roboto,'Helvetica Neue',Arial;color:var(--text);background:linear-gradient(180deg,var(--bg-0),#020202);-webkit-font-smoothing:antialiased}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .bg-terminal{position:fixed;inset:0;z-index:-3;pointer-events:none;overflow:hidden}
-    .terminal-window{position:absolute;inset:0;display:flex;align-items:flex-end;padding:36px}
-    .terminal-stream{width:100%;max-width:1400px;margin:0 auto;line-height:1.25;font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, 'Roboto Mono', monospace;font-size:13px;color:var(--neon1);opacity:0.9;text-shadow:0 0 8px rgba(0,255,136,0.06)}
-    .terminal-stream .line{white-space:pre;opacity:0.95}
+<title>Nuestro Diario ❤️</title>
 
-    .bg-overlay{position:fixed;inset:0;z-index:-2;background:linear-gradient(180deg, rgba(0,0,0,0.45), rgba(0,0,0,0.6))}
+<link rel="stylesheet" href="style.css">
 
-    .app{display:grid;grid-template-columns:280px 1fr;gap:24px;max-width:1280px;margin:28px auto;padding:20px;align-items:start}
+<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300&display=swap" rel="stylesheet">
 
-    .sidebar{background:linear-gradient(180deg, rgba(12,18,12,0.85), rgba(8,12,8,0.75));border-radius:14px;padding:18px;border:var(--glass-border);box-shadow:var(--shadow-strong);position:relative;overflow:hidden}
-    .brand{display:flex;align-items:center;gap:12px;margin-bottom:18px}
-    .logo{width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--neon3),var(--neon1));display:flex;align-items:center;justify-content:center;font-weight:700;color:#021105}
-    .brand h3{margin:0;font-size:1.05rem;color:var(--neon2);letter-spacing:0.6px}
-    .sidebar p{margin:6px 0 18px;color:var(--muted);font-size:0.9rem}
-
-    .nav{display:flex;flex-direction:column;gap:8px}
-    .nav button{background:transparent;border:none;color:var(--muted);padding:10px 12px;border-radius:10px;text-align:left;cursor:pointer;font-weight:700;display:flex;gap:10px;align-items:center;border:1px solid transparent;transition:all .18s ease}
-    .nav button:hover{background:rgba(0,255,136,0.02);color:var(--neon1);transform:translateX(6px)}
-    .nav button.active{background:linear-gradient(90deg, rgba(0,255,136,0.04), rgba(102,255,179,0.03));color:var(--neon1);box-shadow:0 6px 18px rgba(0,255,136,0.04);border:1px solid rgba(0,255,136,0.04)}
-
-    .sidebar .meta{position:absolute;left:18px;right:18px;bottom:18px;color:var(--muted);font-size:0.85rem;display:flex;justify-content:space-between;align-items:center}
-
-    .main{display:flex;flex-direction:column;gap:18px}
-    .topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 18px;border-radius:12px;background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));border:var(--glass-border);}
-    .breadcrumbs{font-size:0.9rem;color:var(--muted)}
-    .top-actions{display:flex;gap:10px}
-    .icon-btn{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px;border-radius:10px;color:var(--muted);cursor:pointer}
-    .icon-btn:hover{border-color:rgba(255,255,255,0.06);color:var(--text)}
-
-    .grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
-    .panel{background:linear-gradient(180deg, rgba(10,14,10,0.9), rgba(6,10,6,0.8));padding:18px;border-radius:14px;border:var(--glass-border);box-shadow:0 10px 30px rgba(0,0,0,0.6)}
-    .panel h2{margin:0 0 12px;color:var(--neon2)}
-    .muted{color:var(--muted);font-size:0.95rem}
-
-    .welcome .title{font-weight:800;font-size:1.25rem;color:var(--neon1)}
-    .tabs{display:flex;gap:8px;margin-top:6px}
-    .tab{padding:8px 12px;border-radius:10px;background:transparent;border:1px solid transparent;color:var(--muted);cursor:pointer}
-    .tab.active{background:linear-gradient(90deg, rgba(0,255,136,0.03), rgba(102,255,179,0.02));color:var(--neon1);border:1px solid rgba(0,255,136,0.02)}
-
-    .accordion .item{margin-bottom:10px;border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.02)}
-    .acc-head{display:flex;justify-content:space-between;align-items:center;padding:12px;background:transparent;cursor:pointer}
-    .acc-body{padding:12px;border-top:1px solid rgba(255,255,255,0.02);display:none;color:var(--muted)}
-
-    .window{background:linear-gradient(180deg, rgba(10,18,10,0.6), rgba(6,10,6,0.4));border-radius:10px;padding:12px;border:1px solid rgba(255,255,255,0.02);position:relative;overflow:hidden}
-    .w-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-    .w-dot{width:12px;height:12px;border-radius:50%}
-    .w-dot.red{background:#ff6b6b}
-    .w-dot.yellow{background:#ffd166}
-    .w-dot.green{background:#8bffb8}
-    .window.minimized{height:38px;padding:10px}
-
-    .modal-backdrop{position:fixed;inset:0;background:linear-gradient(rgba(0,0,0,0.6),rgba(0,0,0,0.6));display:none;align-items:center;justify-content:center;z-index:60}
-    .modal{width:720px;max-width:92%;background:linear-gradient(180deg, rgba(6,10,6,0.96), rgba(2,4,2,0.96));border-radius:12px;padding:20px;border:1px solid rgba(255,255,255,0.03);box-shadow:0 20px 60px rgba(0,0,0,0.8)}
-
-    .primary{background:linear-gradient(135deg,var(--neon1),var(--neon2));border:none;color:#021105;padding:10px 14px;border-radius:10px;font-weight:700;cursor:pointer}
-    .primary:hover{transform:translateY(-3px);box-shadow:0 8px 28px rgba(0,255,136,0.08)}
-    .ghost{background:transparent;border:1px solid rgba(255,255,255,0.03);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
-
-    .footer{color:var(--muted);font-size:0.9rem;text-align:center;margin-top:16px}
-
-    @keyframes pulseNeon{0%{box-shadow:0 0 6px rgba(0,255,136,0.06)}50%{box-shadow:0 0 18px rgba(102,255,179,0.06)}100%{box-shadow:0 0 6px rgba(0,255,136,0.06)}}
-    .neon{animation:pulseNeon 4s infinite}
-    @media (max-width:980px){.app{grid-template-columns:1fr;}.grid{grid-template-columns:1fr}}
-  </style>
 </head>
+
 <body>
-  <!-- FONDO TERMINAL (NO INTERACTIVO) -->
-  <div class="bg-terminal" aria-hidden="true">
-    <div class="terminal-window">
-      <div class="terminal-stream" id="terminal-stream" aria-hidden="true"></div>
-    </div>
-  </div>
-  <div class="bg-overlay" aria-hidden="true"></div>
 
-  <div class="app">
-    <!-- SIDEBAR -->
-    <aside class="sidebar" role="navigation">
-      <div class="brand">
-        <div class="logo">HK</div>
-        <div>
-          <h3>HACKERS</h3>
-          <div class="muted">Manual Interactivo</div>
-        </div>
-      </div>
+<canvas id="particles"></canvas>
 
-      <p class="muted">Manual del juego educativo "HACKERS". Responde preguntas básicas de Python. Resumen de reglas, modos y pruebas disponibles.</p>
+<header>
 
-      <nav class="nav" aria-label="Navegación principal">
-        <button class="active" data-section="overview">🏠 Overview</button>
-        <button data-section="rules">📜 Reglas</button>
-        <button data-section="controls">🎛 Controles</button>
-        <button data-section="mechanics">⚙️ Mecánicas</button>
-        <button data-section="training">🧠 Entrenamiento</button>
-        <button data-section="testing">🔬 Pruebas</button>
-        <button data-section="faq">❓ FAQ</button>
-      </nav>
+<h1>Sol ❤️</h1>
+<p>Nuestros recuerdos más bonitos</p>
 
-      <div class="meta">
-        <div>v1.0</div>
-        <div class="muted">© 2025</div>
-      </div>
-    </aside>
+</header>
 
-    <!-- MAIN -->
-    <main class="main">
-      <div class="topbar">
-        <div class="breadcrumbs">HACKERS / <span id="crumb">Overview</span></div>
-        <div class="top-actions">
-          <div style="text-align:right">
-            <div style="font-size:0.85rem;color:var(--muted)">Equipo</div>
-            <div style="font-weight:800;color:var(--neon1)">Brandon S. Gil · J. F. Bravo · A. Cadena · D. Landazury</div>
-          </div>
-        </div>
-      </div>
 
-      <div class="grid">
-        <!-- COLUMNA PRINCIPAL -->
-        <section class="panel" id="content-panel">
-          <div class="welcome">
-            <div class="title neon">Bienvenido, Operador</div>
-            <div class="desc muted">HACKERS es un juego educativo donde los jugadores responden preguntas básicas sobre Python para manipular el temporizador de una bomba virtual. El objetivo: llevar el temporizador hasta <strong>10:00</strong>. Si llega a <strong>00:00</strong>, la bomba explota y la partida termina.</div>
+<section class="contador">
 
-            <div class="tabs" role="tablist" aria-label="Secciones rápidas">
-              <button class="tab active" data-tab="quick">Rápido</button>
-              <button class="tab" data-tab="details">Detalles</button>
-              <button class="tab" data-tab="logs">Registros</button>
-            </div>
-          </div>
+<h2>Llevamos juntos</h2>
 
-          <!-- SECCIONES -->
-          <div id="overview" class="section-block">
-            <h2>Overview</h2>
-            <p class="muted">En cada ronda, el temporizador comienza en un tiempo determinado por el diseñador del nivel (por ejemplo 03:00). Cada <strong>respuesta correcta</strong> suma <strong>1 minuto 30 segundos</strong> (+1:30). Cada <strong>respuesta incorrecta</strong> resta <strong>1 minuto</strong> (-1:00). El objetivo de los jugadores es cooperar para que el temporizador alcance <strong>10:00</strong> antes de que llegue a 00:00.</p>
+<div id="tiempo"></div>
 
-            <div style="display:flex;gap:12px;margin-top:14px;flex-wrap:wrap">
-              <button class="primary" onclick="window.location.href='game.html'">Abrir Simulador</button>
-              
-            </div>
+</section>
 
-            <div style="margin-top:18px;display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px">
-              <div class="window" id="win-1">
-                <div class="w-title"><strong>Módulo: Sintaxis</strong><div class="w-controls"><span class="w-dot red"></span><span class="w-dot yellow"></span><span class="w-dot green"></span></div></div>
-                <div class="muted">Preguntas sobre indentación, print, def, import y errores de sintaxis en Python.</div>
-              </div>
 
-              <div class="window float" id="win-2">
-                <div class="w-title"><strong>Módulo: Estructuras</strong><div class="w-controls"><span class="w-dot red"></span><span class="w-dot yellow"></span><span class="w-dot green"></span></div></div>
-                <div class="muted">Preguntas sobre listas, tuplas, diccionarios, sets y sus operaciones básicas.</div>
-              </div>
+<section class="recuerdos">
 
-              <div class="window" id="win-3">
-                <div class="w-title"><strong>Módulo: Algoritmos</strong><div class="w-controls"><span class="w-dot red"></span><span class="w-dot yellow"></span><span class="w-dot green"></span></div></div>
-                <div class="muted">Pequeños retos de lógica: bucles, condicionales y predicción de salidas de fragmentos de código.</div>
-              </div>
-            </div>
+<div class="polaroid" data-mensaje="Nunca olvidaré el momento en que te vi por primera vez. Fue el inicio de algo hermoso.">
 
-            <div style="margin-top:16px" class="muted"><strong>Nota:</strong> Las preguntas están diseñadas para ser básicas y educativas. El simulador ofrece una prueba virtual y existe una versión física del prototipo para pruebas en persona.</div>
-          </div>
+<img src="foto1.jpeg" alt="Recuerdo 1">
 
-          <div id="rules" class="section-block" style="display:none">
-            <h2>Reglas del juego</h2>
-            <ul>
-              <li>Objetivo: Llevar el temporizador hasta <strong>10:00</strong> para ganar.</li>
-              <li>Si el temporizador llega a <strong>00:00</strong>, la partida finaliza (explosión virtual).</li>
-              <li>Respuesta correcta: <strong>+1:30</strong>.</li>
-              <li>Respuesta incorrecta: <strong>-1:00</strong>.</li>
-              <li>El temporizador no puede pasar de 10:00 — al alcanzar 10:00 se declara victoria.</li>
-              <li>Partidas cooperativas: los jugadores deben comunicarse y decidir qué preguntas responder y en qué orden.</li>
-            </ul>
-          </div>
+<p>El día que te vi</p>
 
-          <div id="controls" class="section-block" style="display:none">
-            <h2>Controles</h2>
-            <p class="muted">Interacción por ratón y teclado. En el simulador virtual se puede introducir respuestas de texto a preguntas; la versión física usa tarjetas y un cronómetro para replicar las mismas reglas.</p>
-          </div>
+</div>
 
-          <div id="mechanics" class="section-block" style="display:none">
-            <h2>Mecánicas</h2>
-            <p class="muted">Las rondas presentan preguntas de opción múltiple y fragmentos de código. Cada respuesta modifica el tiempo del cronómetro según las reglas. Existen fases de "calma" y fases de "pánico" con preguntas más difíciles.</p>
-            <div class="accordion" style="margin-top:12px">
-              <div class="item">
-                <div class="acc-head">Puzles de Código</div>
-                <div class="acc-body">Completa el código, predice salidas o detecta errores comunes.</div>
-              </div>
-              <div class="item">
-                <div class="acc-head">Modo Equipo</div>
-                <div class="acc-body">Roles: Lector (lee la pregunta), Codificador (escribe la respuesta) y Tiempo (vigila el cronómetro).</div>
-              </div>
-            </div>
-          </div>
 
-          <div id="training" class="section-block" style="display:none">
-            <h2>Entrenamiento</h2>
-            <p class="muted">Modo práctica para resolver preguntas de Python sin presión de tiempo. Recomendado antes de la prueba física.</p>
-            <div style="margin-top:12px"><button class="primary" onclick="window.location.href='game.html'">Abrir Simulador</button></div>
-          </div>
+<div class="polaroid" data-mensaje="Ese momento fue uno de los primeros en los que entendí lo feliz que me haces.">
 
-          <div id="testing" class="section-block" style="display:none">
-            <h2>Pruebas disponibles</h2>
-            <p class="muted">Contamos con:</p>
-            <ul>
-              <li><strong>Prueba virtual:</strong> simulador dentro del manual que ejecuta preguntas y registra resultados.</li>
-              <li><strong>Prueba física:</strong> prototipo con tarjetas de preguntas, cronómetro y manual impreso para sesiones presenciales.</li>
-            </ul>
-          </div>
+<img src="foto2.jpeg" alt="Recuerdo 2">
 
-          <div id="faq" class="section-block" style="display:none">
-            <h2>FAQ</h2>
-            <p class="muted">¿Cómo se puntúa? ¿Puedo crear mis propias preguntas? ¿Qué nivel de Python se requiere? Encuentra respuestas aquí.</p>
-          </div>
+<p>Nuestro primer momento especial</p>
 
-        </section>
+</div>
 
-        <!-- COLUMNA DERECHA -->
-        <aside class="panel right">
-          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-            <div>
-              <div class="muted">Estado</div>
-              <div style="font-weight:700;color:var(--neon1)" id="status">Listo</div>
-            </div>
-            <div>
-              <div class="muted">Tiempo objetivo</div>
-              <div style="font-weight:700;color:var(--neon2)" id="goal">10:00</div>
-            </div>
-          </div>
 
-          <div class="window" id="hint-window">
-            <div class="w-title"><strong>Pistas rápidas</strong><div class="w-controls"><button class="ghost" id="min-hint">—</button></div></div>
-            <div class="acc-body" style="display:block">Respuestas correctas +1:30. Respuestas incorrectas -1:00. Practica sintaxis básica, operaciones con listas y entender salidas de fragmentos.</div>
-          </div>
+<div class="polaroid" data-mensaje="Cada recuerdo contigo es algo que quiero guardar para siempre.">
 
-          <div style="height:12px"></div>
+<img src="foto3.jpeg" alt="Recuerdo 3">
 
-          <div class="window">
-            <div class="w-title"><strong>Recursos</strong><div class="w-controls"></div></div>
-            <div class="muted" style="margin-top:6px">Guía rápida de Python, ejemplos y plantillas para crear preguntas (ficticio).</div>
-          </div>
+<p>Momentos contigo</p>
 
-          <div style="height:12px"></div>
+</div>
 
-          <div class="panel" style="padding:12px">
-            <div class="muted">Modo</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <button class="ghost" id="mode-practice">Práctica</button>
-              <button class="ghost" id="mode-challenge">Desafío</button>
-            </div>
-          </div>
-        </aside>
-      </div>
 
-      <div class="footer">© 2025 HACKERS — Manual interactivo (ficticio). Autores: Brandon Stiven Gil, Juan Felipe Bravo, Alison Cadena, David Landazury.</div>
-    </main>
-  </div>
+<div class="polaroid" data-mensaje="Cuando miro esta foto recuerdo lo mucho que te amo.">
 
-  <div class="modal-backdrop" id="modal-backdrop">
-    <div class="modal" role="dialog" aria-modal="true">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
-        <h3 style="margin:0;color:var(--neon2)">Simulador — Vista previa</h3>
-        <div style="display:flex;gap:8px">
-          <button class="ghost" id="close-modal">Cerrar</button>
-        </div>
-      </div>
-      <div class="muted">El simulador abre una versión controlada y totalmente ficticia de los módulos para practicar preguntas y fragmentos de Python en un entorno seguro.</div>
-      <div style="margin-top:12px;display:flex;gap:8px">
-        <button class="primary" onclick="window.location.href='game.html'">Abrir Simulador</button>
+<img src="foto4.jpeg" alt="Recuerdo 4">
 
-      </div>
-    </div>
-  </div>
+<p>Recuerdos que amo</p>
 
-  <script>
-    /* ========== LÓGICA DE INTERFAZ ========== */
-    document.querySelectorAll('.nav button').forEach(btn=>{
-      btn.addEventListener('click',()=>{
-        document.querySelectorAll('.nav button').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        const s = btn.getAttribute('data-section');
-        document.getElementById('crumb').textContent = btn.textContent.trim();
-        document.querySelectorAll('.section-block').forEach(sb=>sb.style.display='none');
-        const el = document.getElementById(s);
-        if(el) el.style.display='block';
-      });
-    });
+</div>
 
-    document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{
-      document.querySelectorAll('.tab').forEach(x=>x.classList.remove('active'));
-      t.classList.add('active');
-    }));
+</section>
 
-    document.querySelectorAll('.acc-head').forEach(h=>{
-      h.addEventListener('click',()=>{
-        const body = h.nextElementSibling;
-        const open = body.style.display==='block';
-        document.querySelectorAll('.acc-body').forEach(b=>b.style.display='none');
-        body.style.display = open ? 'none' : 'block';
-      });
-    });
 
-    /* Modal controls */
-    const modal = document.getElementById('modal-backdrop');
-    document.getElementById('open-window-sim').addEventListener('click',()=>modal.style.display='flex');
-    document.getElementById('open-help').addEventListener('click',()=>modal.style.display='flex');
-    document.getElementById('close-modal').addEventListener('click',()=>modal.style.display='none');
-    modal.addEventListener('click',e=>{ if(e.target===modal) modal.style.display='none'});
+<section class="carta">
 
-    document.getElementById('open-window-hint').addEventListener('click',()=>{
-      const hw = document.getElementById('hint-window');
-      hw.style.display = hw.style.display==='none' || !hw.style.display ? 'block' : 'none';
-    });
+<h2>Una carta para ti</h2>
 
-    document.getElementById('sim-start').addEventListener('click',()=>{
-      alert('Simulación iniciada — modo demostración (ficticio).');
-    });
-    document.getElementById('sim-reset').addEventListener('click',()=>{
-      alert('Simulación reiniciada.');
-    });
+<button onclick="abrirCarta()">Abrir ❤️</button>
 
-    document.getElementById('min-hint').addEventListener('click',()=>{
-      const w = document.getElementById('hint-window');
-      w.classList.toggle('minimized');
-    });
+<div id="textoCarta"></div>
 
-    document.getElementById('open-editor').addEventListener('click',()=>{
-      document.querySelector('button[data-section="editor"]').click();
-    });
+</section>
 
-    document.getElementById('start-training').addEventListener('click',()=>{
-      alert('Entrenamiento iniciado — práctica libre.');
-    });
 
-    document.addEventListener('keydown',e=>{
-      if(e.key==='Escape') modal.style.display='none';
-    });
 
-    /* ========== FONDO TERMINAL: ESCRIBIR LÍNEAS Y SUBIR (ESCALADO ADAPTABLE) ========== */
-    (function(){
-      const stream = document.getElementById('terminal-stream');
-      const linesMax = 60;                 // líneas visibles antes de eliminar
-      let typingSpeed = 14;                // ms por carácter (ajustable con zoom)
-      const gapBetweenLines = 600;         // ms entre inicio de nuevas líneas
 
-      // Mensajes realistas + ruido
-      const messages = [
-        "# Equipo: Brandon Stiven Gil, Juan Felipe Bravo, Alison Cadena, David Landazury",
-        "import sys",
-        "from simulator import run_level",
-        "def check_answer(ans):",
-        "    # validar respuesta de Python",
-        "    return isinstance(ans, str)",
-        "user_input = input('res> ')",
-        "if check_answer(user_input):",
-        "    print('OK')",
-        "else:",
-        "    print('ERROR: respuesta inválida')",
-        "# Ejecutando prueba virtual...",
-        "[OK] modulo_sintaxis",
-        "[OK] modulo_estructuras",
-        "[WARN] modulo_algoritmos - tiempo alto",
-        "# Temporizador inicial: variable según nivel",
-        "# Reglas: +1:30 por acierto, -1:00 por fallo",
-        "> Simulador listo",
-        "> Conexión establecida",
-        "> Registrando resultados...",
-      ];
 
-      // generar ruido aleatorio de símbolos
-      const symbols = "abcdefghijklmnopqrstuvwxyz0123456789<>[]{}()!@#$%^&*_+=-";
+<div id="popup" class="popup">
 
-      function randSymbolString(len){
-        let s='';
-        for(let i=0;i<len;i++) s += symbols.charAt(Math.floor(Math.random()*symbols.length));
-        return s;
-      }
+<div class="popupContenido">
 
-      function typeLine(text){
-        const el = document.createElement('div');
-        el.className='line';
-        el.textContent='';
-        stream.appendChild(el);
-        if(stream.children.length>linesMax) stream.removeChild(stream.children[0]);
-        let i=0;
-        // ajustar velocidad según ancho de ventana para mantener legibilidad en zoom
-        const dynamicSpeed = Math.max(6, Math.round(typingSpeed * (1200 / Math.max(window.innerWidth,800))));
-        const t = setInterval(()=>{
-          el.textContent += text.charAt(i);
-          i++;
-          if(i>text.length-1){
-            clearInterval(t);
-            el.style.opacity='1';
-            // luego de tipeo, empujar scroll
-            stream.parentElement.scrollTop = stream.parentElement.scrollHeight;
-          }
-        }, dynamicSpeed);
-      }
+<p id="mensajeFoto"></p>
 
-      function pushNext(){
-        // mezclar línea realista con ruido
-        if(Math.random()<0.35){
-          const msg = messages[Math.floor(Math.random()*messages.length)];
-          typeLine('> ' + msg);
-        } else {
-          typeLine('> ' + randSymbolString(Math.floor(Math.random()*40)+10));
-        }
-      }
+<button onclick="cerrarPopup()">Cerrar</button>
 
-      // buffer inicial
-      for(let i=0;i<8;i++){ setTimeout(pushNext, i*180); }
-      // ritmo constante adaptable
-      setInterval(pushNext, gapBetweenLines);
+</div>
 
-      // ajustar tamaño de fuente con la ventana para que siempre sea visible
-      function adjustFont(){
-        const base = Math.max(10, Math.min(16, Math.round(window.innerWidth / 120)));
-        document.querySelector('.terminal-stream').style.fontSize = base + 'px';
-      }
-      window.addEventListener('resize', adjustFont);
-      adjustFont();
+</div>
 
-    })();
-  </script>
+
+
+<script src="script.js"></script>
+
 </body>
 </html>
+
