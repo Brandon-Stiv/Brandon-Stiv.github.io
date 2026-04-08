@@ -1,4 +1,4 @@
-const fechaInicio = new Date("2024-01-01")
+const fechaInicio = new Date("2026-02-21")
 
 function actualizarTiempo(){
 
@@ -25,20 +25,13 @@ function abrirCarta(){
 
 document.getElementById("textoCarta").innerHTML =
 `
-Sol,
+Mi niña,
 
-Desde el día que apareciste en mi vida
-todo empezó a sentirse diferente.
+Desde el día en que apareciste en mi vida todo cambió. Cada risa, cada enojo de mentiritas y cada mirada entre nosotros son cosas que me hacen muy feliz, y quiero hacerte sentir igual de feliz cada día.
 
-Tus sonrisas, nuestras conversaciones,
-cada momento contigo se volvió un recuerdo
-que quiero guardar para siempre.
+A veces trato de expresarte todo lo que siento por ti, pero las palabras no alcanzan para expresar lo mucho que te quiero.
 
-A veces intento explicar lo que siento,
-pero las palabras no alcanzan.
-
-Solo sé que contigo soy feliz
-y que te amo muchísimo.
+Con amor Brandon.
 `
 
 }
