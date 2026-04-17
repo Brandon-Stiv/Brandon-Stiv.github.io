@@ -1,111 +1,66 @@
-
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Nuestro Diario ❤️</title>
-
-<link rel="stylesheet" href="style.css">
-
-<link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300&display=swap" rel="stylesheet">
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sol ❤️ - Nuestro Diario</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-
 <body>
+    <canvas id="particles"></canvas>
 
-<canvas id="particles"></canvas>
+    <header>
+        <h1>Sol ❤️</h1>
+        <p>Nuestros recuerdos más bonitos</p>
+    </header>
 
-<header>
+    <section class="contador">
+        <h2>Llevamos juntos</h2>
+        <div id="tiempo"></div>
+    </section>
 
-<h1>Sol ❤️</h1>
-<p>Nuestros recuerdos más bonitos</p>
+    <section class="recuerdos">
+        <div class="polaroid" data-mensaje="Mi amor, quiero que sepas que eres una de las personas que más felicidad le ha traído a mi vida. Desde que estás conmigo todo tiene más sentido, todo se siente más bonito. Te amo con todo mi corazón y cada día que pasa me doy cuenta de que quiero seguir compartiendo mi vida contigo, riendo, abrazándote y haciéndote feliz.">
+            <img src="foto1.jpeg" alt="Recuerdo 1">
+            <p>💞</p>
+        </div>
 
-</header>
+        <div class="polaroid" data-mensaje="Me encantas tal y como eres, con maquillaje o sin maquillaje, porque tu belleza va mucho más allá de lo que se ve. Me gusta tu forma de ser, tu manera de hablar, tu forma de mirar y de sonreír. Te amo con todo mi corazón y siempre voy a sentirme orgulloso de tener a alguien tan hermosa y especial como tú a mi lado.">
+            <img src="foto2.jpeg" alt="Recuerdo 2">
+            <p>💞</p>
+        </div>
 
+        <div class="polaroid" data-mensaje="Adoro tu sonrisa, porque ilumina mis días incluso cuando todo parece difícil. Adoro tus besos, tus abrazos y cada caricia que me das, porque en cada una de ellas siento tu amor. Eres mi lugar favorito, la persona con la que quiero estar siempre, y la razón por la que sonrío tantas veces al día.">
+            <img src="foto3.jpeg" alt="Recuerdo 3">
+            <p>💞</p>
+        </div>
 
-<section class="contador">
+        <div class="polaroid" data-mensaje="Quiero que siempre estés en mi vida, acompañándome en cada momento, en cada sueño y en cada paso que demos juntos. Me haces inmensamente feliz y te amo con todo mi corazón. Siempre voy a querer estar contigo, cuidarte, abrazarte fuerte y recordarte todos los días lo importante que eres para mí.">
+            <img src="foto4.jpeg" alt="Recuerdo 4">
+            <p>💞</p>
+        </div>
+    </section>
 
-<h2>Llevamos juntos</h2>
+    <section class="carta">
+        <h2>Una carta para ti</h2>
+        <button onclick="abrirCarta()">Abrir ❤️</button>
+        <div id="textoCarta"></div>
+    </section>
 
-<div id="tiempo"></div>
-
-</section>
-
-
-<section class="recuerdos">
-
-<div class="polaroid" data-mensaje="Mi amor, quiero que sepas que eres una de las personas que más felicidad le ha traído a mi vida. Desde que estás conmigo todo tiene más sentido, todo se siente más bonito. Te amo con todo mi corazón y cada día que pasa me doy cuenta de que quiero seguir compartiendo mi vida contigo, riendo, abrazándote y haciéndote feliz.">
-
-<img src="foto1.jpeg" alt="Recuerdo 1">
-
-<p>💞</p>
-
+    <!-- POPUP SIMPLIFICADO (sin botón Cerrar extra) -->
+    <div id="popup" class="popup">
+    <div class="popupContenido">
+        <div class="popupHeader">
+            <h3 class="tituloCursivo">💕 Mensaje especial 💕</h3>
+        </div>
+        <div id="mensajeFoto" class="mensajeTexto"></div>
+        <div class="popupFooter">
+            <span class="amorTexto">Con amor, Brandon 💕</span>
+        </div>
+    </div>
 </div>
 
-
-<div class="polaroid" data-mensaje="Me encantas tal y como eres, con maquillaje o sin maquillaje, porque tu belleza va mucho más allá de lo que se ve. Me gusta tu forma de ser, tu manera de hablar, tu forma de mirar y de sonreír. Te amo con todo mi corazón y siempre voy a sentirme orgulloso de tener a alguien tan hermosa y especial como tú a mi lado.">
-
-<img src="foto2.jpeg" alt="Recuerdo 2">
-
-<p>💞</p>
-
-</div>
-
-
-<div class="polaroid" data-mensaje="Adoro tu sonrisa, porque ilumina mis días incluso cuando todo parece difícil. Adoro tus besos, tus abrazos y cada caricia que me das, porque en cada una de ellas siento tu amor. Eres mi lugar favorito, la persona con la que quiero estar siempre, y la razón por la que sonrío tantas veces al día.">
-
-<img src="foto3.jpeg" alt="Recuerdo 3">
-
-<p>💞</p>
-
-</div>
-
-
-<div class="polaroid" data-mensaje="Quiero que siempre estés en mi vida, acompañándome en cada momento, en cada sueño y en cada paso que demos juntos. Me haces inmensamente feliz y te amo con todo mi corazón. Siempre voy a querer estar contigo, cuidarte, abrazarte fuerte y recordarte todos los días lo importante que eres para mí.">
-
-<img src="foto4.jpeg" alt="Recuerdo 4">
-
-<p>💞</p>
-
-</div>
-
-</section>
-
-
-<section class="carta">
-
-<h2>Una carta para ti</h2>
-
-<button onclick="abrirCarta()">Abrir ❤️</button>
-
-<div id="textoCarta"></div>
-
-</section>
-
-
-
-
-
-<div id="popup" class="popup">
-
-<div class="popupContenido">
-
-<p id="mensajeFoto"></p>
-
-<button onclick="cerrarPopup()">Cerrar</button>
-
-</div>
-
-</div>
-
-
-
-<script src="script.js"></script>
-
+    <script src="script.js"></script>
 </body>
 </html>
-
