@@ -3,67 +3,134 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sol ❤️ - Nuestro Diario</title>
+    <title>Sol - Nuestro Diario</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <canvas id="particles"></canvas>
+    <canvas id="particles" aria-hidden="true"></canvas>
 
-    <header>
-        <h1>Sol ❤️</h1>
-        <p>Nuestros recuerdos más bonitos</p>
+    <header class="hero" id="inicio">
+        <video id="heroVideo" class="hero-video" autoplay muted loop playsinline preload="auto" poster="foto1.jpeg">
+            <source src="video.mp4" type="video/mp4">
+        </video>
+
+        <nav class="nav" aria-label="Navegacion principal">
+            <a class="brand" href="#inicio">Sol</a>
+            <div class="nav-links">
+                <a href="#tiempo-juntos">Tiempo</a>
+                <a href="#recuerdos">Recuerdos</a>
+                <a href="#carta">Carta</a>
+            </div>
+        </nav>
+
+        <div class="hero-content">
+            <p class="eyebrow">Nuestro peque&ntilde;o universo</p>
+            <h1>Mi sol</h1>
+            <p class="hero-copy">
+                Una p&aacute;gina hecha para guardar lo bonito: los d&iacute;as, las fotos,
+                las palabras y todo eso que se siente mejor cuando lo vivimos juntos.
+            </p>
+            <div class="hero-actions">
+                <a class="button primary" href="#recuerdos">Ver recuerdos</a>
+                <a class="button secondary" href="#carta">Abrir carta</a>
+            </div>
+        </div>
     </header>
 
-    <section class="contador">
-        <h2>Llevamos juntos</h2>
-        <div id="tiempo"></div>
-    </section>
+    <main>
+        <section class="counter-band" id="tiempo-juntos">
+            <div class="section-heading">
+                <p class="eyebrow">Desde el 11 de abril de 2026</p>
+                <h2>Llevamos juntos</h2>
+            </div>
+            <div class="counter-grid" id="tiempo" aria-live="polite"></div>
+        </section>
 
-    <section class="recuerdos">
-        <div class="polaroid" data-mensaje="Mi amor, quiero que sepas que eres una de las personas que más felicidad le ha traído a mi vida. Desde que estás conmigo todo tiene más sentido, todo se siente más bonito. Te amo con todo mi corazón y cada día que pasa me doy cuenta de que quiero seguir compartiendo mi vida contigo, riendo, abrazándote y haciéndote feliz.">
-            <img src="foto1.jpeg" alt="Recuerdo 1">
-            <p>💞</p>
-        </div>
+        <section class="memories" id="recuerdos">
+            <div class="section-heading">
+                <p class="eyebrow">Galer&iacute;a de momentos</p>
+                <h2>Recuerdos que hablan por s&iacute; solos</h2>
+            </div>
 
-        <div class="polaroid" data-mensaje="Me encantas tal y como eres, con maquillaje o sin maquillaje, porque tu belleza va mucho más allá de lo que se ve. Me gusta tu forma de ser, tu manera de hablar, tu forma de mirar y de sonreír. Te amo con todo mi corazón y siempre voy a sentirme orgulloso de tener a alguien tan hermosa y especial como tú a mi lado.">
-            <img src="foto2.jpeg" alt="Recuerdo 2">
-            <p>💞</p>
-        </div>
+            <div class="memory-grid">
+                <article class="memory-card" data-title="Mi felicidad" data-message="Mi amor, quiero que sepas que eres una de las personas que m&aacute;s felicidad le ha tra&iacute;do a mi vida. Desde que est&aacute;s conmigo todo tiene m&aacute;s sentido, todo se siente m&aacute;s bonito. Te amo con todo mi coraz&oacute;n y cada d&iacute;a que pasa me doy cuenta de que quiero seguir compartiendo mi vida contigo, riendo, abraz&aacute;ndote y haci&eacute;ndote feliz.">
+                    <img src="foto1.jpeg" alt="Recuerdo especial juntos">
+                    <div class="memory-info">
+                        <span>01</span>
+                        <h3>Mi felicidad</h3>
+                    </div>
+                </article>
 
-        <div class="polaroid" data-mensaje="Adoro tu sonrisa, porque ilumina mis días incluso cuando todo parece difícil. Adoro tus besos, tus abrazos y cada caricia que me das, porque en cada una de ellas siento tu amor. Eres mi lugar favorito, la persona con la que quiero estar siempre, y la razón por la que sonrío tantas veces al día.">
-            <img src="foto3.jpeg" alt="Recuerdo 3">
-            <p>💞</p>
-        </div>
+                <article class="memory-card" data-title="C&oacute;mo eres" data-message="Me encantas tal y como eres, con maquillaje o sin maquillaje, porque tu belleza va mucho m&aacute;s all&aacute; de lo que se ve. Me gusta tu forma de ser, tu manera de hablar, tu forma de mirar y de sonre&iacute;r. Te amo con todo mi coraz&oacute;n y siempre voy a sentirme orgulloso de tener a alguien tan hermosa y especial como t&uacute; a mi lado.">
+                    <img src="foto2.jpeg" alt="Retrato de Sol">
+                    <div class="memory-info">
+                        <span>02</span>
+                        <h3>C&oacute;mo eres</h3>
+                    </div>
+                </article>
 
-        <div class="polaroid" data-mensaje="Quiero que siempre estés en mi vida, acompañándome en cada momento, en cada sueño y en cada paso que demos juntos. Me haces inmensamente feliz y te amo con todo mi corazón. Siempre voy a querer estar contigo, cuidarte, abrazarte fuerte y recordarte todos los días lo importante que eres para mí.">
-            <img src="foto4.jpeg" alt="Recuerdo 4">
-            <p>💞</p>
-        </div>
-        <div class="polaroid" data-mensaje="Hoy te quiero agradecer mi niñita hermosa, por haberme concedido creo yo, una de tus mayores confianzas, te agradezco por ser tan cariñosa conmigo, gracias por ser tu misma en todo momento, gracias por estar para mi cuando te necesito. Quiero decirte que de igual manera yo confío en ti en todos los sentidos, quiero de que cuentes conmigo absolutamente para todo y te sientas en la libertad de contarme lo que sea. Te amo muchísimo mi princesa hemocha💞. ">
-            <img src="IMG_1284.jpeg" alt="Recuerdo 5">
-            <p>☀️</p>
-        </div>
-    </section>
+                <article class="memory-card" data-title="Tu sonrisa" data-message="Adoro tu sonrisa, porque ilumina mis d&iacute;as incluso cuando todo parece dif&iacute;cil. Adoro tus besos, tus abrazos y cada caricia que me das, porque en cada una de ellas siento tu amor. Eres mi lugar favorito, la persona con la que quiero estar siempre, y la raz&oacute;n por la que sonr&iacute;o tantas veces al d&iacute;a.">
+                    <img src="foto3.jpeg" alt="Momento sonriente">
+                    <div class="memory-info">
+                        <span>03</span>
+                        <h3>Tu sonrisa</h3>
+                    </div>
+                </article>
 
-    <section class="carta">
-        <h2>Una carta para ti</h2>
-        <button onclick="abrirCarta()">Abrir ❤️</button>
-        <div id="textoCarta"></div>
-    </section>
+                <article class="memory-card" data-title="Siempre contigo" data-message="Quiero que siempre est&eacute;s en mi vida, acompa&ntilde;&aacute;ndome en cada momento, en cada sue&ntilde;o y en cada paso que demos juntos. Me haces inmensamente feliz y te amo con todo mi coraz&oacute;n. Siempre voy a querer estar contigo, cuidarte, abrazarte fuerte y recordarte todos los d&iacute;as lo importante que eres para m&iacute;.">
+                    <img src="foto4.jpeg" alt="Otro recuerdo importante">
+                    <div class="memory-info">
+                        <span>04</span>
+                        <h3>Siempre contigo</h3>
+                    </div>
+                </article>
 
-    <!-- POPUP SIMPLIFICADO (sin botón Cerrar extra) -->
-    <div id="popup" class="popup">
-    <div class="popupContenido">
-        <div class="popupHeader">
-            <h3 class="tituloCursivo">💕 Mensaje especial 💕</h3>
-        </div>
-        <div id="mensajeFoto" class="mensajeTexto"></div>
-        <div class="popupFooter">
-            <span class="amorTexto">Con amor, Brandon 💕</span>
+                <article class="memory-card" data-title="Gracias por confiar" data-message="Hoy te quiero agradecer mi ni&ntilde;ita hermosa, por haberme concedido una de tus mayores confianzas. Te agradezco por ser tan cari&ntilde;osa conmigo, gracias por ser t&uacute; misma en todo momento y gracias por estar para m&iacute; cuando te necesito. Yo tambi&eacute;n conf&iacute;o en ti en todos los sentidos, quiero que cuentes conmigo absolutamente para todo y que te sientas en libertad de contarme lo que sea. Te amo much&iacute;simo, mi princesa hermosa.">
+                    <img src="IMG_1284.jpeg" alt="Recuerdo favorito">
+                    <div class="memory-info">
+                        <span>05</span>
+                        <h3>Gracias por confiar</h3>
+                    </div>
+                </article>
+
+                <article class="memory-card wide" data-title="Gracias por hacerme tan feliz este primer mes" data-message="Hoy 11 de mayo de 2026, quiero agradecerte por hacerme tan feliz en este primer mes juntos. Cada d&iacute;a a tu lado es un regalo que valoro profundamente, y me siento afortunado de tener a alguien tan maravillosa como t&uacute; en mi vida. Gracias por cada sonrisa, cada abrazo y cada momento compartido. Te amo con todo mi coraz&oacute;n y estoy emocionado por todos los momentos hermosos que nos esperan en el futuro.">
+                    <img src="foto5.jpeg" alt="Celebrando nuestro primer mes">
+                    <div class="memory-info">
+                        <span>06</span>
+                        <h3>Gracias por hacerme tan feliz este primer mes</h3>
+                    </div>
+                </article>
+            </div>
+        </section>
+
+        <section class="letter-section" id="carta">
+            <div class="letter-copy">
+                <p class="eyebrow">Para cuando quieras leerme</p>
+                <h2>Una carta para ti</h2>
+                <p>
+                    Hay palabras que no caben en un mensaje normal. Esta carta queda aqu&iacute;
+                    para recordarte lo mucho que significas para m&iacute;.
+                </p>
+                <button class="button primary" type="button" id="openLetter">Abrir carta</button>
+            </div>
+            <div class="letter-panel" id="textoCarta" aria-live="polite">
+                <p>Presiona el bot&oacute;n y la carta aparecer&aacute; aqu&iacute;.</p>
+            </div>
+        </section>
+    </main>
+
+    <div class="modal" id="popup" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+        <div class="modal-content">
+            <button class="close-button" type="button" id="closePopup" aria-label="Cerrar mensaje">&times;</button>
+            <p class="eyebrow">Mensaje especial</p>
+            <h2 id="modalTitle">Recuerdo</h2>
+            <p id="mensajeFoto"></p>
+            <span class="signature">Con amor, Brandon</span>
         </div>
     </div>
-</div>
 
     <script src="script.js"></script>
 </body>
