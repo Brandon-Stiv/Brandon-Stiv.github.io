@@ -560,3 +560,52 @@ section {
         min-height: 300px;
     }
 }
+
+.songs-section {
+    background: var(--paper);
+    color: var(--ink);
+}
+
+.songs-grid {
+    width: min(1100px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit,minmax(300px,1fr));
+    gap: 24px;
+}
+
+.song-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 15px 40px rgba(0,0,0,.1);
+    transition: .3s;
+}
+
+.song-card:hover {
+    transform: translateY(-5px);
+}
+
+.song-card img {
+    width: 100%;
+    height: 280px;
+    object-fit: cover;
+}
+
+.song-info {
+    padding: 20px;
+}
+
+.song-info h3 {
+    margin-bottom: 5px;
+    color: var(--rose);
+}
+
+.song-info p {
+    margin-bottom: 15px;
+    color: var(--muted);
+}
+
+.song-info audio {
+    width: 100%;
+}
