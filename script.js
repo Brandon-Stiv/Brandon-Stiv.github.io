@@ -72,9 +72,24 @@ function cerrarPopup() {
 }
 
 document.querySelectorAll(".memory-card").forEach((card) => {
-    card.addEventListener("click", () => {
+    const abrirCard = () => {
+        if (card.dataset.redirect) {
+            window.location.href = card.dataset.redirect;
+            return;
+        }
+
         abrirPopup(card.dataset.title, card.dataset.message);
+    };
+
+    card.addEventListener("click", abrirCard);
+    card.addEventListener("keydown", (event) => {
+        if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            abrirCard();
+        }
     });
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
 });
 
 openLetter.addEventListener("click", abrirCarta);
