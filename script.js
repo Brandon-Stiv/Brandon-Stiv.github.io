@@ -73,8 +73,10 @@ function cerrarPopup() {
 
 document.querySelectorAll(".memory-card").forEach((card) => {
     const abrirCard = () => {
-        if (card.dataset.redirect) {
-            window.location.href = card.dataset.redirect;
+        const redirect = card.dataset.redirect || (card.tagName.toLowerCase() === "a" ? card.href : "");
+
+        if (redirect) {
+            window.location.href = redirect;
             return;
         }
 
