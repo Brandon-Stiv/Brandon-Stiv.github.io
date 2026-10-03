@@ -7,10 +7,22 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Playfair+Display:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
     <canvas id="particles" aria-hidden="true"></canvas>
+    <div class="reading-progress" aria-hidden="true"><span></span></div>
+
+    <section class="welcome-screen" id="welcomeScreen" aria-label="Bienvenida">
+        <div class="welcome-orbit orbit-one"></div>
+        <div class="welcome-orbit orbit-two"></div>
+        <div class="welcome-card">
+            <p>Un regalo para ti</p>
+            <div class="welcome-heart" aria-hidden="true">&#9825;</div>
+            <h1>Para mi sol</h1>
+            <button class="enter-button" type="button" id="enterSite">Abrir nuestro rinc&oacute;n <span>&rarr;</span></button>
+        </div>
+    </section>
 
     <header class="hero" id="inicio">
         <video id="heroVideo" class="hero-video" autoplay muted loop playsinline preload="auto" poster="foto1.jpeg">
@@ -22,6 +34,7 @@
             <div class="nav-links">
                 <a href="#tiempo-juntos">Tiempo</a>
                 <a href="#recuerdos">Recuerdos</a>
+                <a href="#canciones">Canciones</a>
                 <a href="#carta">Carta</a>
             </div>
         </nav>
@@ -30,9 +43,13 @@
             <p class="eyebrow">Nuestro peque&ntilde;o universo</p>
             <h1>Mi sol</h1>
             <p class="hero-copy">
-                Una p&aacute;gina hecha para guardar lo bonito: los d&iacute;as, las fotos,
-                las palabras y todo eso que se siente mejor cuando lo vivimos juntos.
+                Un rinc&oacute;n para volver a nosotros: los d&iacute;as, las fotos, las
+                palabras y las canciones que hacen nuestra historia inolvidable.
             </p>
+            <div class="hero-seal" aria-hidden="true">
+                <span>un diario de</span>
+                <strong>nosotros</strong>
+            </div>
             <div class="hero-actions">
                 <a class="button primary" href="#recuerdos">Ver recuerdos</a>
                 <a class="button secondary" href="#carta">Abrir carta</a>
@@ -40,7 +57,7 @@
         </div>
     </header>
 
-    <main>
+    <main id="contenido">
         <section class="counter-band" id="tiempo-juntos">
             <div class="section-heading">
                 <p class="eyebrow">Desde el 11 de abril de 2026</p>
@@ -172,13 +189,66 @@
                         <h3>Ya 4 mesesotes</h3>
                     </div>
                 </article>
-                <article class="memory-card wide" data-title="Como te sientes" data-message="Sé que últimamente has tenido momentos en los que te sientes frustrada, desanimada o simplemente no estás bien, y entiendo que a veces tu manera de afrontar todo eso sea alejarte y quedarte sola. No quiero juzgarte por sentirte así ni hacerte sentir mal por ello. Solo quiero que sepas que no tienes que pasar por esos momentos completamente sola.  Cuando estés triste, frustrada o tengas algo que te esté haciendo sentir mal, quiero que puedas hablar conmigo. No tienes que esconder lo que sientes ni fingir que todo está bien delante de mí. Quiero que me permitas estar ahí, escucharte y acompañarte, incluso cuando no tengas ganas de hablar demasiado.  Sé que nosotros también tenemos cosas que mejorar. A veces podemos lastimarnos sin querer, podemos entendernos mal o reaccionar de una manera que no deberíamos. Pero quiero que trabajemos los dos para mejorar, para aprender a comunicarnos y para que ninguno de los dos tenga que enfrentar las dificultades por su cuenta.  No quiero que pienses que tienes que estar siempre feliz o ser cariñosa conmigo para que yo quiera estar a tu lado. Te quiero también en tus días malos, cuando estés cansada, frustrada o simplemente necesites un poco de tranquilidad.  Solo quiero pedirte que, cuando algo te pase, intentes dejarme entrar un poquito en tu corazón. Dime lo que sientes, aunque sea difícil. Déjame escucharte. Déjame acompañarte.  Yo no puedo solucionar todo lo que te pasa, pero sí puedo estar a tu lado mientras lo atraviesas.  Y quiero que tengas algo muy claro: jamás quiero hacerte daño. Quiero que conmigo puedas sentirte segura, escuchada, respetada y querida.  No quiero obligarte a hablar cuando necesites espacio. Solo quiero que aprendamos juntos a encontrar una manera de que ese espacio no se convierta en una distancia entre nosotros.  Quiero verte bien, quiero verte feliz y, sobre todo, quiero que sepas que no tienes que cargar con todo sola.  Estoy aquí. Y quiero seguir estando. ❤️‍🔥">
+                <article class="memory-card" data-title="Como te sientes" data-message="Sé que últimamente has tenido momentos en los que te sientes frustrada, desanimada o simplemente no estás bien, y entiendo que a veces tu manera de afrontar todo eso sea alejarte y quedarte sola. No quiero juzgarte por sentirte así ni hacerte sentir mal por ello. Solo quiero que sepas que no tienes que pasar por esos momentos completamente sola.  Cuando estés triste, frustrada o tengas algo que te esté haciendo sentir mal, quiero que puedas hablar conmigo. No tienes que esconder lo que sientes ni fingir que todo está bien delante de mí. Quiero que me permitas estar ahí, escucharte y acompañarte, incluso cuando no tengas ganas de hablar demasiado.  Sé que nosotros también tenemos cosas que mejorar. A veces podemos lastimarnos sin querer, podemos entendernos mal o reaccionar de una manera que no deberíamos. Pero quiero que trabajemos los dos para mejorar, para aprender a comunicarnos y para que ninguno de los dos tenga que enfrentar las dificultades por su cuenta.  No quiero que pienses que tienes que estar siempre feliz o ser cariñosa conmigo para que yo quiera estar a tu lado. Te quiero también en tus días malos, cuando estés cansada, frustrada o simplemente necesites un poco de tranquilidad.  Solo quiero pedirte que, cuando algo te pase, intentes dejarme entrar un poquito en tu corazón. Dime lo que sientes, aunque sea difícil. Déjame escucharte. Déjame acompañarte.  Yo no puedo solucionar todo lo que te pasa, pero sí puedo estar a tu lado mientras lo atraviesas.  Y quiero que tengas algo muy claro: jamás quiero hacerte daño. Quiero que conmigo puedas sentirte segura, escuchada, respetada y querida.  No quiero obligarte a hablar cuando necesites espacio. Solo quiero que aprendamos juntos a encontrar una manera de que ese espacio no se convierta en una distancia entre nosotros.  Quiero verte bien, quiero verte feliz y, sobre todo, quiero que sepas que no tienes que cargar con todo sola.  Estoy aquí. Y quiero seguir estando. ❤️‍🔥">
                     <img src="foto15.jpg" alt="Como te sientes">
                     <div class="memory-info">
                         <span>15</span>
                         <h3>Como te sientes</h3>
                     </div>
                 </article>
+                <article class="memory-card" data-title="5 meses" data-message="Mi niña preciosa:
+
+Hoy, 11 de septiembre, cumplimos nuestros 5 meses juntos, en los cuales hemos pasado por aún más dificultades, problemas, discusiones, malos entendidos, malos tratos y palabras que hirieron al otro. En fin, hemos enfrentado muchos problemas. Incluso estuviste a punto de rendirte por completo y dejarlo todo, pero al final no lo hiciste.
+
+Con el tiempo hemos aprendido a solucionar nuestros problemas cada vez mejor. Sé que no todo ha sido perfecto y también sé que he cometido miles de errores, pero de todos y cada uno de ellos he aprendido algo. He mejorado mucho como persona, aunque quizás no lo notes demasiado.
+
+Gracias por compartir conmigo estos maravillosos 5 meses, en los que me has hecho el hombre más feliz del mundo, el más amado, querido, adorado y deseado.
+
+Así como aquel día en el que te prometí que cambiaría aquel anillo de promesa por uno de compromiso, hoy vuelvo a prometerte que serás la única en mi corazón; que te amaré incluso en los días difíciles; que serás y eres la mujer de mi vida.
+
+También te prometo que serás mi elección de cada día, mi prioridad y mi lugar seguro.
+
+Eres todo para mí, nunca lo pongas en duda.
+
+**TE AMO CON EL ALMA, MI MONA PRECIOSA.** ❤️
+">
+                    <img src="foto16.jpg" alt="5 meses">
+                    <div class="memory-info">
+                        <span>16</span>
+                        <h3>5 meses</h3>
+                    </div>
+                </article>
+                <article class="memory-card" data-title="Un día normal" data-message="Mi solecito:
+
+Hoy es un día normal, no celebramos nada en especial ni ha pasado nada fuera de lo habitual, pero simplemente quiero decirte que eres, te ves, estás y luces hermosa.
+
+Si fuera posible, yo mismo me quitaría los ojos para que pudieras ver a través de ellos y darte cuenta de lo hermosa y bella que eres ante mis ojos. No existe ni existirá otra mujer que me guste más que tú. Me encanta cada parte de tu ser y estoy profundamente enamorado de ti.
+
+Quisiera que esos hermosos ojos que tienes me siguieran mirando toda la vida, que nunca dejaran de verme y que, entre tantas personas en este mundo, siempre me siguieran eligiendo a mí. Espero de todo corazón que así sea.
+
+**Te amo, mi solecito hermoso.** ❤️
+">
+                    <img src="foto17.jpg" alt="Un día normal">
+                    <div class="memory-info">
+                        <span>17</span>
+                        <h3>Un día normal</h3>
+                    </div>
+                </article>
+                <article class="memory-card" data-title="Gracias" data-message="Mi mona:
+
+Hoy quisiera agradecerte por tanto amor que me brindas, por permitirme amarte sin límites y por haberme permitido conocer un poquito más de tu corazoncito.
+
+Valoro muchísimo que aún sigas conmigo. Sé que a veces puedo llegar a ser muy celoso o cansón, pero quiero que sepas que estoy trabajando en ello. Te amo tanto que, a veces, me cuesta imaginar que alguien más pueda llegar a recibir esas muestras de cariño que tanto me gusta darte. No quisiera que otro hombre supiera lo que se siente ser abrazado, acariciado o recibir cualquier otra muestra de afecto de tu parte.
+
+Te amo hoy, mañana y siempre, mi mona hermosa. ❤️
+">
+                    <img src="foto18.jpg" alt="Gracias">
+                    <div class="memory-info">
+                        <span>18</span>
+                        <h3>Gracias</h3>
+                    </div>
+                </article>
+
             </div>
         </section>
         <section class="songs-section" id="canciones">
@@ -310,6 +380,12 @@
         </section>
     </main>
 
+    <footer class="site-footer">
+        <span>Hecho con mucho amor</span>
+        <span aria-hidden="true">&#10022;</span>
+        <span>Para mi sol</span>
+    </footer>
+
     <div class="modal" id="popup" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
         <div class="modal-content">
             <button class="close-button" type="button" id="closePopup" aria-label="Cerrar mensaje">&times;</button>
@@ -320,6 +396,6 @@
         </div>
     </div>
 
-    <script src="script.js"></script>
+    <script src="script.js?v=4"></script>
 </body>
 </html>
